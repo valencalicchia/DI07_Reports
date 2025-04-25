@@ -1,8 +1,14 @@
-CREATE DATABASE IF NOT EXISTS fabrica;
+-- Crear base de datos primero
+DROP DATABASE IF EXISTS fabrica;
+CREATE DATABASE fabrica;
+
+-- Crear usuario después de la BD
+DROP USER IF EXISTS 'luis'@'%';
+CREATE USER 'luis'@'%' IDENTIFIED WITH mysql_native_password BY 'Brianda20';
+GRANT ALL PRIVILEGES ON *.* TO 'luis'@'%';
+FLUSH PRIVILEGES;
+
 USE fabrica;
-
-START TRANSACTION;
-
 DROP TABLE IF EXISTS `articulos`;
 CREATE TABLE `articulos` (
   `Id_articulo` INT PRIMARY KEY AUTO_INCREMENT,

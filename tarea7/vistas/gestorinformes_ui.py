@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'gestorinformesYcXIbW.ui'
+## Form generated from reading UI file 'gestorinformes.ui'
 ##
-## Created by: Qt User Interface Compiler version 6.8.1
+## Created by: Qt User Interface Compiler version 6.9.0
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
@@ -18,7 +18,7 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
 from PySide6.QtWidgets import (QApplication, QComboBox, QGridLayout, QHBoxLayout,
     QLabel, QLineEdit, QPushButton, QSizePolicy,
     QVBoxLayout, QWidget)
-import imagenes.imagenes
+import imagenes.imagenes_rc
 
 class Ui_GestorInformes(object):
     def setupUi(self, GestorInformes):
@@ -99,7 +99,7 @@ class Ui_GestorInformes(object):
 
         self.vcCbo = QComboBox(GestorInformes)
         self.vcCbo.setObjectName(u"vcCbo")
-        self.vcCbo.setEnabled(False)
+        self.vcCbo.setEnabled(True)
         self.vcCbo.setFont(font1)
 
         self.gridLayout.addWidget(self.vcCbo, 1, 1, 1, 1)

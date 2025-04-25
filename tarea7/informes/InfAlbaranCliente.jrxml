@@ -1,0 +1,453 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 7.0.2.final using JasperReports Library version 6.20.6  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="InfAlbaranCliente" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="08d8c343-3cc7-47d4-bba6-3767e871ffe1">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="New Data Adapter"/>
+	<parameter name="id_cliente" class="java.lang.String"/>
+	<queryString language="SQL">
+		<![CDATA[SELECT
+            p.ID_Pedido,
+            DATE(p.Fecha_Pedido) as Fecha_Pedido,
+            c.Nombre,
+            c.Direccion,
+            c.Ciudad,
+            t.Telefono,
+            e.Email,
+            t.Persona_Contacto,
+            dp.ID_Venta as NumeroLinea,
+            a.Descripcion as Articulo,
+            dp.Unidades,
+            a.Precio as CosteUnitario,
+            (dp.Unidades * a.Precio) as CosteVenta,
+            COUNT(dp.ID_Venta) OVER(PARTITION BY p.ID_Pedido) as TotalArticulosEnPedido,
+            SUM(dp.Unidades * a.Precio) OVER(PARTITION BY p.ID_Pedido) as ImporteTotal,
+            SUM(dp.Unidades) OVER(PARTITION BY p.ID_Pedido) as NumeroArticulosEnAlbaran
+        FROM
+            clientes c
+        JOIN
+            pedidos p ON c.ID_Cliente = p.ID_Cliente
+        LEFT JOIN
+            telefonos t ON c.ID_Cliente = t.Id_Cliente
+        LEFT JOIN
+            emails e ON c.ID_Cliente = e.Id_cliente
+        JOIN
+            detalle_pedidos dp ON p.ID_Pedido = dp.ID_Pedido
+        JOIN
+            articulos a ON dp.ID_Articulo = a.Id_articulo
+        WHERE
+            c.ID_Cliente = $P{id_cliente}
+        ORDER BY
+            c.Nombre, p.ID_Pedido, dp.ID_Venta]]>
+	</queryString>
+	<field name="ID_Pedido" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="ID_Pedido"/>
+		<property name="com.jaspersoft.studio.field.label" value="ID_Pedido"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="pedidos"/>
+	</field>
+	<field name="Fecha_Pedido" class="java.sql.Date">
+		<property name="com.jaspersoft.studio.field.name" value="Fecha_Pedido"/>
+		<property name="com.jaspersoft.studio.field.label" value="Fecha_Pedido"/>
+	</field>
+	<field name="Nombre" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="Nombre"/>
+		<property name="com.jaspersoft.studio.field.label" value="Nombre"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="clientes"/>
+	</field>
+	<field name="Direccion" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="Direccion"/>
+		<property name="com.jaspersoft.studio.field.label" value="Direccion"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="clientes"/>
+	</field>
+	<field name="Ciudad" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="Ciudad"/>
+		<property name="com.jaspersoft.studio.field.label" value="Ciudad"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="clientes"/>
+	</field>
+	<field name="Telefono" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="Telefono"/>
+		<property name="com.jaspersoft.studio.field.label" value="Telefono"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="telefonos"/>
+	</field>
+	<field name="Email" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="Email"/>
+		<property name="com.jaspersoft.studio.field.label" value="Email"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="emails"/>
+	</field>
+	<field name="Persona_Contacto" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="Persona_Contacto"/>
+		<property name="com.jaspersoft.studio.field.label" value="Persona_Contacto"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="telefonos"/>
+	</field>
+	<field name="NumeroLinea" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="ID_Venta"/>
+		<property name="com.jaspersoft.studio.field.label" value="NumeroLinea"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="detalle_pedidos"/>
+	</field>
+	<field name="Articulo" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="Descripcion"/>
+		<property name="com.jaspersoft.studio.field.label" value="Articulo"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="articulos"/>
+	</field>
+	<field name="Unidades" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="Unidades"/>
+		<property name="com.jaspersoft.studio.field.label" value="Unidades"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="detalle_pedidos"/>
+	</field>
+	<field name="CosteUnitario" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="Precio"/>
+		<property name="com.jaspersoft.studio.field.label" value="CosteUnitario"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="articulos"/>
+	</field>
+	<field name="CosteVenta" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="CosteVenta"/>
+		<property name="com.jaspersoft.studio.field.label" value="CosteVenta"/>
+	</field>
+	<field name="TotalArticulosEnPedido" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.name" value="TotalArticulosEnPedido"/>
+		<property name="com.jaspersoft.studio.field.label" value="TotalArticulosEnPedido"/>
+	</field>
+	<field name="ImporteTotal" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="ImporteTotal"/>
+		<property name="com.jaspersoft.studio.field.label" value="ImporteTotal"/>
+	</field>
+	<field name="NumeroArticulosEnAlbaran" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="NumeroArticulosEnAlbaran"/>
+		<property name="com.jaspersoft.studio.field.label" value="NumeroArticulosEnAlbaran"/>
+	</field>
+	<variable name="lineNumber" class="java.lang.Integer" calculation="Count">
+		<variableExpression><![CDATA[$F{NumeroLinea}]]></variableExpression>
+		<initialValueExpression><![CDATA[1]]></initialValueExpression>
+	</variable>
+	<group name="ClienteGrupo">
+		<groupHeader>
+			<band height="170">
+				<rectangle>
+					<reportElement x="0" y="0" width="272" height="170" uuid="ddb28f68-a048-4727-b20f-176505c07b39"/>
+				</rectangle>
+				<textField>
+					<reportElement x="10" y="10" width="250" height="30" uuid="613f605f-abf9-471e-a03e-33e2fb66a6e6"/>
+					<textElement verticalAlignment="Middle">
+						<font size="17" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{Nombre}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="10" y="40" width="250" height="30" uuid="ee7725f6-b62e-4f3f-8e87-681b737e495a"/>
+					<textElement verticalAlignment="Middle">
+						<font size="17"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{Direccion}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="10" y="70" width="250" height="30" uuid="f86a9f27-3c62-4ec7-afbe-62780a991f61"/>
+					<textElement verticalAlignment="Middle">
+						<font size="17"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{Ciudad}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="10" y="100" width="250" height="30" uuid="7408dd06-397e-46ef-b62d-6ba2363f4a20"/>
+					<textElement verticalAlignment="Middle">
+						<font size="17"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{Telefono}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="10" y="130" width="250" height="30" uuid="9d2973a1-dd18-428c-aedf-e493e732b1f3"/>
+					<textElement verticalAlignment="Middle">
+						<font size="17"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{Email}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+	</group>
+	<group name="PedidoGroup">
+		<groupExpression><![CDATA[$F{ID_Pedido}]]></groupExpression>
+		<groupHeader>
+			<band height="80">
+				<staticText>
+					<reportElement x="0" y="50" width="55" height="30" uuid="3e25d7b9-ddf7-4c4c-b8a6-240c3f353eeb"/>
+					<box>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="16" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Línea]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="55" y="50" width="195" height="30" uuid="be35e554-c5ea-4a86-9592-e96a690ed026"/>
+					<box>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement verticalAlignment="Middle">
+						<font size="16" isBold="true"/>
+					</textElement>
+					<text><![CDATA[   Artículo]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="250" y="50" width="80" height="30" uuid="8de82cd0-b73f-41af-9e43-0d754bcf9ff9"/>
+					<box>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="16" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Unidades]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="330" y="50" width="100" height="30" uuid="1552397c-758b-4d1a-9aa4-a7bd181ddcec"/>
+					<box>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="16" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Coste Unit.]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="430" y="50" width="125" height="30" uuid="c45c62e9-b944-4b68-b6a4-d177766e9729"/>
+					<box>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="16" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Coste Venta]]></text>
+				</staticText>
+				<rectangle>
+					<reportElement x="0" y="18" width="554" height="25" uuid="a39ded7b-b92a-4440-88d5-0fa1fb8b72e9"/>
+				</rectangle>
+				<staticText>
+					<reportElement x="10" y="18" width="90" height="25" uuid="853d1c6d-6ae4-49b8-8cea-438470165c8b"/>
+					<textElement verticalAlignment="Middle">
+						<font size="16" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Nº Pedido:]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="100" y="18" width="150" height="25" uuid="3315c643-f295-4079-8457-85e3c8f81628"/>
+					<textElement verticalAlignment="Middle">
+						<font size="16"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{ID_Pedido}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="340" y="18" width="60" height="25" uuid="a999316f-22a2-48b5-8f63-f40d6fb64870"/>
+					<textElement verticalAlignment="Middle">
+						<font size="16" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Fecha:]]></text>
+				</staticText>
+				<textField pattern="dd/MM/yyyy">
+					<reportElement x="400" y="18" width="150" height="25" uuid="dfc87ad6-793a-4b36-938c-4cf349c52c62"/>
+					<textElement verticalAlignment="Middle">
+						<font size="16"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{Fecha_Pedido}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="110">
+				<staticText>
+					<reportElement x="250" y="0" width="180" height="26" uuid="dddea827-a755-458e-9b33-8caa14e85c9e"/>
+					<box>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="16" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Total Artículos:]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="430" y="0" width="125" height="26" uuid="253726ee-4512-4def-911c-743849b69c60"/>
+					<box>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="14"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{TotalArticulosEnPedido}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="250" y="26" width="180" height="24" uuid="1a2a48fe-8da5-46b5-9d47-aa2083dd9a9e"/>
+					<box>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="16" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Importe Total:]]></text>
+				</staticText>
+				<textField pattern="#,##0.00 €">
+					<reportElement x="430" y="26" width="125" height="24" uuid="23f441f6-38dd-4f61-97ab-d040aa72e10d"/>
+					<box>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="14"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{ImporteTotal}]]></textFieldExpression>
+				</textField>
+				<rectangle>
+					<reportElement x="0" y="60" width="555" height="50" uuid="3df6d1b8-7f78-498d-8c18-c0996bab794a"/>
+				</rectangle>
+				<staticText>
+					<reportElement x="2" y="63" width="153" height="30" uuid="ad631ef7-c953-420b-9465-6ea9353e5b5b"/>
+					<textElement>
+						<font size="16" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Observaciones:]]></text>
+				</staticText>
+			</band>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="160" splitType="Stretch">
+			<image>
+				<reportElement x="473" y="0" width="81" height="82" uuid="f7e34bd4-7583-4f53-a466-14ae5b898e9e"/>
+				<imageExpression><![CDATA["./imagenes/logo.png"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="0" y="0" width="200" height="53" uuid="6dbd7c7a-3bda-4217-bc97-82e34c41407a"/>
+				<textElement>
+					<font size="35" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ALBARÁN]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="310" y="82" width="244" height="48" uuid="4ca40501-eedf-4cc3-90c7-7c89c1385e9a"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="24" isBold="true"/>
+				</textElement>
+				<text><![CDATA[SumiMetálicos, S.L.]]></text>
+			</staticText>
+			<textField pattern="MMMMM dd, yyyy">
+				<reportElement x="380" y="130" width="175" height="30" uuid="e572135d-b05c-40a6-90ff-18aa4d3d929c"/>
+				<textElement textAlignment="Right">
+					<font size="16"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="55" height="20" uuid="52981399-3f4a-436e-a0a0-bec4f67e8389"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="15"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{lineNumber}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="55" y="0" width="195" height="20" uuid="26b241e5-37e9-43a3-ba31-26e35f7ee091"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="15"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Articulo}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="250" y="0" width="80" height="20" uuid="a8f6875b-57e9-4eb9-904f-148d5c7edfaa"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="15"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Unidades}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00 €">
+				<reportElement x="330" y="0" width="100" height="20" uuid="b0c316b5-8456-4ff3-a161-f07c4a123b17"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="15"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CosteUnitario}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00 €">
+				<reportElement x="430" y="0" width="125" height="20" uuid="19b4c18d-6aaf-47f0-b086-f15bd3cbdeb0"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="15"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CosteVenta}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="30" splitType="Stretch">
+			<textField>
+				<reportElement x="380" y="10" width="135" height="20" uuid="a81302d5-36b7-46fc-aac8-91d075b1d84b"/>
+				<textElement textAlignment="Right">
+					<font size="15"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Página "+$V{PAGE_NUMBER}+" de"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="515" y="10" width="40" height="20" uuid="c0d77f3c-2e0b-44c4-aa7e-ad8e579fcad4"/>
+				<textElement>
+					<font size="15"/>
+				</textElement>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+</jasperReport>

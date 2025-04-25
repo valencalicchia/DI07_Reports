@@ -11,6 +11,11 @@ class ReportController(QWidget):
             self.ui = Ui_GestorInformes()
             self.ui.setupUi(self)
 
+            self.ui.vcTxtRutaInf.setText(os.getcwd())  
+            self.ui.vcTxtRutaGuardado.setText(os.getcwd())      
+            
+            self.get_reports()
+
             self.ui.vcTxtRutaInf.mousePressEvent = self.select_report_dir
             self.ui.vcTxtRutaGuardado.mousePressEvent = self.select_save_dir
             self.ui.vcBtnGuardar.clicked.connect(self.generate)
@@ -20,24 +25,25 @@ class ReportController(QWidget):
 
     def select_report_dir(self, event):
         dir = QFileDialog.getExistingDirectory(
-            self, "Selecciona carpeta de informes", os.path.expanduser("~"),
+            self, "Selecciona carpeta de informes", self.ui.vcTxtRutaInf.text(),
             QFileDialog.ShowDirsOnly
         )
         if dir:
             self.ui.vcTxtRutaInf.setText(dir)
-            self.ui.vcCbo.setEnabled(True)
-            self.get_reports(dir)
+            self.get_reports()
 
     def select_save_dir(self, event):
         dir = QFileDialog.getExistingDirectory(
-            self, "Selecciona carpeta para guardar informes", os.path.expanduser("~"),
+            self, "Selecciona carpeta para guardar informes", self.ui.vcTxtRutaGuardado.text(),
             QFileDialog.ShowDirsOnly
         )
         if dir:
             self.ui.vcTxtRutaGuardado.setText(dir)
 
-    def get_reports(self, ruta):
+    def get_reports(self):
         try:
+            ruta = self.ui.vcTxtRutaInf.text()
+
             ficheros = [archivo for archivo in os.listdir(ruta) if archivo.lower().endswith(('.jrxml', '.jasper'))]
             self.ui.vcCbo.clear()
             self.ui.vcCbo.addItems(ficheros)
@@ -53,9 +59,11 @@ class ReportController(QWidget):
     def generate(self):
         try:
             informes_con_dato = {
-                'Informe_AlbaranPedido': "Introduce el número del pedido",
-                'Informe_AlbaranCliente': "Introduce el número del cliente",
-                'Informe_AlbaranClienteSub': "Introduce el número del cliente"
+                'prueba': "Introduce el número del pedido",
+                
+                'InfAlbaranCliente': "Introduce el número del cliente",
+                'InfAlbaranPedido': "Introduce el número del pedido",
+                'InfAlbaranClienteSub': "Introduce el número del cliente"
             }
 
             informe_elegido = self.ui.vcCbo.currentText().replace('.jrxml', '')
@@ -66,7 +74,7 @@ class ReportController(QWidget):
                 dato = self.get_params(texto_solicitud)
                 if not dato:
                     return
-                clave = 'param_pedido' if 'Pedido' in informe_elegido else 'param_cliente'
+                clave = 'id_pedido' if 'Pedido' in informe_elegido else 'id_cliente'
                 parametros[clave] = dato
 
             origen = self.ui.vcTxtRutaInf.text()

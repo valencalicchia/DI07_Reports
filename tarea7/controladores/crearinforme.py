@@ -88,7 +88,7 @@ def json_to_pdf(): # Informe en JSON
 
 
 def advanced_example_using_database(ficheroEntrada, ficheroSalida,parametros):
-    
+
     input_file = ficheroEntrada
     output_file = ficheroSalida 
     """
@@ -103,7 +103,6 @@ def advanced_example_using_database(ficheroEntrada, ficheroSalida,parametros):
         'port': '5432'
     }"""
     
-    """
     #conexión para mysql
     con = {
     'driver': 'mysql',
@@ -114,9 +113,9 @@ def advanced_example_using_database(ficheroEntrada, ficheroSalida,parametros):
      'schema': 'DB_SCHEMA',
      'port': '3306',
      'jdbc_driver': 'com.mysql.cj.jdbc.Driver',
-     'jdbc_dir': 'libs/jdbc/mysql-connector-java-8.0.30.jar'
-    }"""
-    
+     'jdbc_dir': os.path.join(os.path.dirname(__file__), 'mysql-connector-java-8.0.30.jar'),
+     'jdbc_url': 'jdbc:mysql://localhost:3306/fabrica?allowPublicKeyRetrieval=true&useSSL=false'
+    }
 
     """
     Conexión para SQLIte. A diferencia de postgreSQL y MySQL, pyreportjasper no viene preparado para
@@ -133,7 +132,7 @@ def advanced_example_using_database(ficheroEntrada, ficheroSalida,parametros):
     También tener en cuenta que SQLite es menos permisivo con los tipos de los datos en los Dataset
     de los reportes .jrxml: es necesario indicar claramente el tipo (string, integer, float...)
 
-    """
+
     con = {
     'driver': 'sqlite',
     'jdbc_driver': 'org.sqlite.JDBC',
@@ -142,9 +141,10 @@ def advanced_example_using_database(ficheroEntrada, ficheroSalida,parametros):
     
     }
     #libs/jdbc/sqlite-jdbc-3.7.2.jar
-    
+    """
+          
     jasper = pyreportjasper.PyReportJasper()
-   
+
     jasper.process(
         input_file,
         output_file,
@@ -156,7 +156,6 @@ def advanced_example_using_database(ficheroEntrada, ficheroSalida,parametros):
         locale='es_ES'  # LOCALE Ex.:(en_US, de_GE)
     )
    # print(jasper.list_report_params)
-
 if __name__ == "__main__":
 
     #compiling()
